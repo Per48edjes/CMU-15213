@@ -1,10 +1,6 @@
-IMAGE_NAME = lx70716/cmu-15213
+IMAGE_NAME = cspp
 
-.PHONY: build run
-
-build:
-	colima start
-	docker pull $(IMAGE_NAME) 
+.PHONY: run
 
 run:
-	docker run --rm --platform linux/amd64 -v "`pwd`"/labs:/usr/src/app/ -it $(IMAGE_NAME)
+	docker run --rm --platform linux/amd64 -v "`pwd`"/labs:/usr/src/app/ -it cspp 

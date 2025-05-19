@@ -13,4 +13,3 @@ RUN apt-get update \
     vim \
   && rm -rf /var/lib/apt/lists/*
 
-COPY . .
