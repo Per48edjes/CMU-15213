@@ -143,7 +143,7 @@ NOTES:
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return 2;
+  return ~((~(~x & y)) & (~(x & ~y)));
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -152,9 +152,7 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int tmin(void) {
-
-  return 2;
-
+  	return (1 << 31);
 }
 //2
 /*
@@ -164,8 +162,8 @@ int tmin(void) {
  *   Max ops: 10
  *   Rating: 1
  */
-int isTmax(int x) {
-  return 2;
+int isTmax(int x){
+  return !(~((x+1) ^ x)) & !!(x+1);
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -176,7 +174,7 @@ int isTmax(int x) {
  *   Rating: 2
  */
 int allOddBits(int x) {
-  return 2;
+  return !((x | 0x55 | (0x55 << 8) | (0x55 << 16) | (0x55 << 24)) ^ ~0);
 }
 /* 
  * negate - return -x 
@@ -186,7 +184,7 @@ int allOddBits(int x) {
  *   Rating: 2
  */
 int negate(int x) {
-  return 2;
+  return ~x + 1;
 }
 //3
 /* 
@@ -199,7 +197,7 @@ int negate(int x) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return 2;
+  return ((((~x + 1) + 0x2f) >> 31) & 1) & ((x + (~(0x3a) + 1)) >> 31 & 1);
 }
 /* 
  * conditional - same as x ? y : z 
@@ -209,7 +207,7 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  return ((~(!!x) + 1) & y) | (~(~(!!x) + 1) & z);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -218,8 +216,8 @@ int conditional(int x, int y, int z) {
  *   Max ops: 24
  *   Rating: 3
  */
-int isLessOrEqual(int x, int y) {
-  return 2;
+int isLessOrEqual(int x, int y){
+  return (!(x ^ y)) | (((x >> 31) & 1) & !((y >> 31) & 1)) | ((!(((x ^ y) >> 31) & 1)) & (((x + (~y + 1)) >> 31) & 1));
 }
 //4
 /* 
@@ -231,7 +229,7 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return 2;
+  return ((~((x ^ (~x + 1)) | x)) >> 31) & 1;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -246,7 +244,11 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  return 0;
+	//we return the index of the most signigant bit (1-indexed) + 1 when positive.
+	//if x == 0, 1 is returned. 
+	//if the number is negative we preform the same operations on the compliment.
+	
+	return (((x + ~0) >> 31) & 1);
 }
 //float
 /* 
